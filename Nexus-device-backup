@@ -1,0 +1,30 @@
+
+#Written by Prashant Jha
+
+
+from __future__ import print_function
+from netmiko import ConnectHandler
+
+import sys
+import time
+import datetime
+import select
+import paramiko
+import re
+fd = open(" .txt",'r')  #Enter name of your text file where IPs of Device are stored
+
+platform = 'cisco_nxos'
+username = ''  #Enter your username
+password = ''  #Enter your password
+
+for items in fd:
+    f1=items.split()
+    for host in f1:
+        device = ConnectHandler(device_type=platform, ip=host, username=username, password=password)
+        output = device.send_command('terminal length 0')
+
+        print('...................CISCO COMMAND SHOW RUN OUTPUT FOR.....................' + host)
+        output = device.send_command('sh run')
+        now = datetime.date.today()
+        with open((host +"-"+ str(now) + ".txt"), "a+") as file:
+            file.write(str(output)+"\n")
